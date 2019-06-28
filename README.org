@@ -1,0 +1,69 @@
+#+FILE_ID: orgfile:42338955-2fed-48e0-b844-da7b50a491ae
+* OpenJPEG cross-compiled for JavaScript
+:PROPERTIES:
+:CUSTOM_ID: id:79a05c19-358f-422c-bcc2-168fa8dc9546
+:END:
+
+** Prerequisites
+:PROPERTIES:
+:CUSTOM_ID: id:6cf2befa-bb64-4bce-93e7-59d189959589
+:END:
+
+Software required:
+- [[https://emscripten.org/docs/getting_started/downloads.html][emscripten]] (installed via emsdk)
+
+** Build Instructions
+:PROPERTIES:
+:CUSTOM_ID: id:d5fb1e8f-6543-458c-969a-99263aa9f1dd
+:END:
+
+Ensure that you have activated an emscripten SDK. Afterwards, source the emsdk
+environment.
+#+BEGIN_EXAMPLE
+/emsdk/emsdk activate latest
+source /emsdk/emsdk_env.sh
+#+END_EXAMPLE
+
+Once the environment is set up, clone the [[https://github.com/uclouvain/openjpeg][OpenJPEG official repo]] and checkout
+the desired version.
+#+BEGIN_EXAMPLE
+git clone https://github.com/uclouvain/openjpeg.git
+#+END_EXAMPLE
+
+Apply the patch file =openjpeg-js.patch=.
+#+BEGIN_EXAMPLE
+cd openjpeg/
+git apply ../openjpeg-js.patch
+#+END_EXAMPLE
+
+After applying the patch, we will now build openjpeg into LLVM bitcode. The
+second cmake invocation is to skip the error related to TestEndian from cmake.
+Make sure you have sourced the =emsdk_env.sh= as shown above.
+#+BEGIN_EXAMPLE
+mkdir openjpeg/build
+cd openjpeg/build
+
+cmake \
+  -DCMAKE_TOOLCHAIN_FILE=/path/to/emsdk/fastcomp/emscripten/cmake/Modules/Platform/Emscripten.cmake \
+  -DBUILD_CODEC=OFF \
+  -DBUILD_SHARED_LIBS=OFF \
+  -G'Unix Makefiles' \
+  -DCMAKE_BUILD_TYPE=Release \
+  ..
+
+cmake .
+
+make
+#+END_EXAMPLE
+
+The output will be in =openjpeg/build/bin/libopenjp2.a=.
+
+Once openjpeg has been compiled, it's time to compile the wrapping. Edit
+=emcc-compile.sh= and update the =OPENJPEG_ROOT= to the path of the openjpeg
+repo from above. You may also adjust the emcc flags as you see fit.
+
+Once edited, just compile! Be sure to have the =emsdk_env.sh= sourced from
+above.
+#+BEGIN_EXAMPLE
+./emcc-compile.sh
+#+END_EXAMPLE
