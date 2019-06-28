@@ -4,6 +4,9 @@
 :CUSTOM_ID: id:79a05c19-358f-422c-bcc2-168fa8dc9546
 :END:
 
+This is based on the [[https://github.com/cornerstonejs/openjpeg][openjpeg+js work in cornerstone]],
+except upgraded for new openjpeg builds.
+
 ** Prerequisites
 :PROPERTIES:
 :CUSTOM_ID: id:6cf2befa-bb64-4bce-93e7-59d189959589
