@@ -70,3 +70,5 @@ above.
 #+BEGIN_EXAMPLE
 ./emcc-compile.sh
 #+END_EXAMPLE
+
+The resulting cross-compiled OpenJPEG will be found in =out/=.
